@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ultimate CV & Resume Resource Hub</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 50%, #7dd3fc 100%);
+            min-height: 100vh;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+        }
+    </style>
+</head>
+<body class="text-slate-800 font-sans antialiased p-4 sm:p-8 flex flex-col justify-between min-h-screen">
+
+    <div class="max-w-6xl mx-auto w-full">
+        <!-- Header Section -->
+        <header class="text-center mb-10">
+            <h1 class="text-3xl sm:text-5xl font-extrabold text-sky-900 mb-3 tracking-tight">
+                <i class="fa-solid fa-file-lines text-sky-600 mr-2"></i> Ultimate CV & Resume Hub
+            </h1>
+            <p class="text-slate-600 max-w-2xl mx-auto text-sm sm:text-base">
+                Explore global CV templates, academic samples, country guides, and university resources. Easily search, add, or manage your personal resource links.
+            </p>
+        </header>
+
+        <!-- Controls: Search, Add New & Developer Info Button -->
+        <div class="flex flex-col sm:flex-row justify-between items-center gap-4 mb-8">
+            <!-- Search Bar -->
+            <div class="relative w-full sm:w-96">
+                <span class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-slate-400">
+                    <i class="fa-solid fa-search"></i>
+                </span>
+                <input type="text" id="searchInput" placeholder="Search templates, countries, universities..." 
+                    class="w-full pl-10 pr-4 py-3 rounded-xl glass-card focus:outline-none focus:ring-2 focus:ring-sky-500 text-sm shadow-sm transition">
+            </div>
+
+            <!-- Action Buttons Group -->
+            <div class="flex items-center gap-3 w-full sm:w-auto">
+                <button onclick="openDeveloperModal()" class="flex-1 sm:flex-none bg-sky-800 hover:bg-sky-900 text-white font-medium px-5 py-3 rounded-xl shadow-lg transition flex items-center justify-center gap-2 text-sm">
+                    <i class="fa-solid fa-code"></i> Developer Info
+                </button>
+                <button onclick="openModal()" class="flex-1 sm:flex-none bg-sky-600 hover:bg-sky-700 text-white font-medium px-6 py-3 rounded-xl shadow-lg transition flex items-center justify-center gap-2 text-sm">
+                    <i class="fa-solid fa-plus"></i> Add New Link
+                </button>
+            </div>
+        </div>
+
+        <!-- Main Content Container -->
+        <div id="categoryContainer" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Dynamic Content will be injected here -->
+        </div>
+    </div>
+
+    <!-- Footer Section -->
+    <footer class="mt-16 text-center text-xs sm:text-sm text-slate-700 py-6 border-t border-white/40 glass-card rounded-2xl mx-auto max-w-6xl w-full">
+        <p class="font-semibold text-sky-900">Developed with ❤️ by Shahriar Mahamud Kabbo</p>
+        <p class="mt-1 text-slate-600">Clinical Officer & Software Enthusiast | Cox's Bazar, Bangladesh</p>
+        <div class="flex justify-center items-center gap-4 mt-3">
+            <a href="tel:+8801724651212" class="hover:text-sky-700 transition"><i class="fa-solid fa-phone mr-1"></i> Contact</a>
+            <span>•</span>
+            <a href="mailto:smkabbo95@gmail.com" class="hover:text-sky-700 transition"><i class="fa-solid fa-envelope mr-1"></i> Email</a>
+        </div>
+    </footer>
+
+    <!-- Add/Edit Link Modal -->
+    <div id="linkModal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
+        <div class="glass-card rounded-2xl p-6 w-full max-w-lg shadow-2xl border border-white">
+            <div class="flex justify-between items-center mb-4">
+                <h3 id="modalTitle" class="text-xl font-bold text-sky-900">Add New Resource Link</h3>
+                <button onclick="closeModal()" class="text-slate-500 hover:text-slate-800"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+            <form id="linkForm" onsubmit="handleFormSubmit(event)">
+                <input type="hidden" id="editCategoryIndex">
+                <input type="hidden" id="editLinkIndex">
+                <div class="mb-4">
+                    <label class="block text-xs font-semibold text-slate-700 uppercase mb-1">Category Title</label>
+                    <input type="text" id="formCategory" required placeholder="e.g., Editable CVs, USA, Harvard University" 
+                        class="w-full p-3 rounded-xl bg-white/70 border border-slate-200 focus:outline-none focus:ring-2 focus:ring-sky-500 text-sm">
+                </div>
+                <div class="mb-4">
+                    <label class="block text-xs font-semibold text-slate-700 uppercase mb-1">Link Title / Label</label>
+                    <input type="text" id="formTitle" required placeholder="e.g., Official Guidelines & Template" 
+                        class="w-full p-3 rounded-xl bg-white/70 border border-slate-200 focus:outline-none focus:ring-2 focus:ring-sky-500 text-sm">
+                </div>
+                <div class="mb-6">
+                    <label class="block text-xs font-semibold text-slate-700 uppercase mb-1">Target URL</label>
+                    <input type="url" id="formUrl" required placeholder="https://example.com" 
+                        class="w-full p-3 rounded-xl bg-white/70 border border-slate-200 focus:outline-none focus:ring-2 focus:ring-sky-500 text-sm">
+                </div>
+                <div class="flex justify-end gap-3">
+                    <button type="button" onclick="closeModal()" class="px-5 py-2.5 rounded-xl bg-slate-200 hover:bg-slate-300 text-slate-700 text-sm font-medium transition">Cancel</button>
+                    <button type="submit" class="px-5 py-2.5 rounded-xl bg-sky-600 hover:bg-sky-700 text-white text-sm font-medium shadow-md transition">Save Link</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Developer Info Modal -->
+    <div id="devModal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
+        <div class="glass-card rounded-2xl p-6 sm:p-8 w-full max-w-md shadow-2xl border border-white text-center">
+            <div class="w-20 h-20 bg-sky-600 text-white rounded-full flex items-center justify-center text-3xl font-bold mx-auto mb-4 shadow-lg">
+                SK
+            </div>
+            <h3 class="text-2xl font-bold text-sky-900 mb-1">Shahriar Mahamud Kabbo</h3>
+            <p class="text-xs font-semibold text-sky-700 uppercase tracking-wider mb-3">Public Health Professional & </p>
+            <p class="text-slate-600 text-sm mb-6 leading-relaxed">
+                Medical Assistant at MSF Bangladesh. Passionate about web application development, medical utilities, and building modern digital productivity tools.
+            </p>
+
+            <div class="bg-white/60 rounded-xl p-4 mb-6 text-left space-y-3 text-sm border border-white/80">
+                <div class="flex items-center gap-3 text-slate-700">
+                    <i class="fa-solid fa-phone text-sky-600 w-5"></i>
+                    <a href="tel:+8801724651212" class="hover:underline font-medium">+8801724651212</a>
+                </div>
+                <div class="flex items-center gap-3 text-slate-700">
+                    <i class="fa-solid fa-envelope text-sky-600 w-5"></i>
+                    <a href="mailto:smkabbo95@gmail.com" class="hover:underline font-medium">smkabbo95@gmail.com</a>
+                </div>
+                <div class="flex items-center gap-3 text-slate-700">
+                    <i class="fa-solid fa-location-dot text-sky-600 w-5"></i>
+                    <span>Palongkhali, Ukhia, Cox's Bazar, Bangladesh</span>
+                </div>
+            </div>
+
+            <button onclick="closeDeveloperModal()" class="w-full bg-sky-600 hover:bg-sky-700 text-white font-medium py-2.5 rounded-xl shadow transition text-sm">
+                Close
+            </button>
+        </div>
+    </div>
+
+    <!-- JavaScript Application Logic -->
+    <script>
+        const defaultData = [
+            {
+                category: "Editable CVs & General Samples",
+                links: [
+                    { title: "Editable CVs Google Drive Folder", url: "https://drive.google.com/drive/folders/1bvu_fUIXWS1o7cwRFL-sSamguqzriHkQ?usp=drive_link" },
+                    { title: "10 CV Samples", url: "https://t.co/dsCwQstFXg?fbclid=IwAR1f2zXXr3FrGLdBtbmX8cBlus58MzMOq_N7EF8yliIB0Vk7Oa-kWD5p2Og" },
+                    { title: "400+ CV Samples Collection", url: "https://t.co/PMohbhg6b6" },
+                    { title: "NGO CV Template", url: "https://drive.google.com/file/d/1Vu43obI7ztpO00dWYM2pLy0MRCLjOqSF/view?usp=drivesdk" }
+                ]
+            },
+            {
+                category: "Country-Specific CV Guides & Samples",
+                links: [
+                    { title: "📍 USA: Cornell University Resumes & CVs Guide", url: "https://gradschool.cornell.edu/career-and-professional-development/pathways-to-success/prepare-for-your-career/take-action/resumes-and-cvs/" },
+                    { title: "📍 Canada: University of Saskatchewan Curriculum Vitae Guide", url: "https://students.usask.ca/jobs/guides/curriculum-vitae-guide.php#Checklist" },
+                    { title: "📍 Canada Resource Link 1", url: "https://t.co/YHAfHkwlOD" },
+                    { title: "📍 Canada Resource Link 2", url: "https://t.co/7ZaYpuW3Yx" },
+                    { title: "📍 Canada: Undergraduate CV & Cover Letter Templates (UBC)", url: "https://students.ubc.ca/career/career-resources/resumes-cover-letters" },
+                    { title: "📍 Canada: CV and Cover Letter Guide (University of Toronto)", url: "https://drive.google.com/file/d/1WNfrh9FLopdwFrDVUSKad2I7jI2bY0Ni/view?usp=drivesdk" },
+                    { title: "📍 Mainland Europe: EEA Europass CV Template", url: "https://www.eea.europa.eu/about-us/jobs/template-europass-cv/view" },
+                    { title: "📍 Mainland Europe: Official Europass CV Builder", url: "https://europa.eu/europass/en/create-europass-cv" },
+                    { title: "📍 UK: University of Oxford Academic Applications", url: "https://www.careers.ox.ac.uk/academic-applications#collapse1542986" },
+                    { title: "📍 UK Resource Link", url: "https://t.co/tRKGD6jsnh" },
+                    { title: "📍 Germany Resource Link", url: "https://t.co/cHa6XSLjcj" },
+                    { title: "📍 Australia Resource Link", url: "https://t.co/mPBO8kM8EY" }
+                ]
+            },
+            {
+                category: "Oxford University Career Guides",
+                links: [
+                    { title: "1. Academic CV (Oxford)", url: "https://www.careers.ox.ac.uk/cvs#collapse1542151" },
+                    { title: "2. Standard CV (Oxford)", url: "https://www.careers.ox.ac.uk/cvs#collapse1542131" },
+                    { title: "3. Skills-based CV (Oxford)", url: "https://www.careers.ox.ac.uk/cvs#collapse1542131" },
+                    { title: "4. Narrative CVs (Oxford)", url: "https://www.careers.ox.ac.uk/cvs#collapse4371391" },
+                    { title: "5. Creative CV (Oxford Careers)", url: "https://www.careers.ox.ac.uk/cvs-for-creative-careers" },
+                    { title: "Official CV Guidance (Oxford Careers Service)", url: "https://www.careers.ox.ac.uk/cvs" }
+                ]
+            },
+            {
+                category: "Top University Templates & Hints (Harvard & Cambridge)",
+                links: [
+                    { title: "1️⃣ Harvard University CV, Cover Letter Templates & Hints", url: "https://drive.google.com/file/d/1hK-e9A53RdgTHyoqEYqVT5YcqYxZElkM/view?usp=drivesdk" },
+                    { title: "3️⃣ Cambridge University CV, Cover Letter Templates & Hints", url: "https://drive.google.com/file/d/1kKJ4jkn08M-G0xkipPVUdt6cAfkjwz2n/view?usp=drivesdk" },
+                    { title: "Academic CV Samples (UIUC)", url: "https://grad.illinois.edu/sites/default/files/pdfs/cvsamples.pdf" },
+                    { title: "CV Tips and Samples (UIUC)", url: "https://grad.illinois.edu/document/student-success/curriculum-vitae-tips-and-samples" }
+                ]
+            },
+            {
+                category: "Global University Faculty & Graduate CV Resources",
+                links: [
+                    { title: "1. Harvard Medical School Faculty CV Guidelines + Word Template", url: "https://fa.hms.harvard.edu/faculty-medicine-cv-guidelines" },
+                    { title: "Harvard FAS/MCS Bullet Resume Template", url: "https://cdn-careerservices.fas.harvard.edu/wp-content/uploads/sites/161/2025/09/2025-template_bullet.docx" },
+                    { title: "2. UPenn Faculty Job Application CVs", url: "https://careerservices.upenn.edu/application-materials-for-the-faculty-job-search/cvs-for-faculty-job-applications" },
+                    { title: "3. Cornell University Graduate Resumes and CVs Guide", url: "https://gradschool.cornell.edu/career-and-professional-development/pathways-to-success/prepare-for-your-career/take-action/resumes-and-cvs" },
+                    { title: "4. University of Notre Dame Templates & Examples", url: "https://gradcareers.nd.edu/application-process/templates-and-examples" },
+                    { title: "Notre Dame General CV Template (Word)", url: "https://gradcareers.nd.edu/assets/345420/overall_cv_template.docx" },
+                    { title: "Notre Dame Research Emphasis CV Template (Word)", url: "https://gradcareers.nd.edu/assets/325328/research_emphasis_cv_template_1_.docx" },
+                    { title: "5. UT Austin Academic CV Templates & Best Practices", url: "https://gradcareer.utexas.edu/job-search/academic/cv" },
+                    { title: "6. UCLA PhD-level CV Template (PDF)", url: "https://cdn.uconnectlabs.com/wp-content/uploads/sites/230/2023/08/PhD-level-CV-Template-GradCareerPrepToolkit.pdf" },
+                    { title: "7. UC Davis Resume and CV Samples", url: "https://careercenter.ucdavis.edu/resumes-and-materials/resumes/resume-cv-samples" },
+                    { title: "8. Princeton University CV Writing Guide for Graduate Students", url: "https://careerdevelopment.princeton.edu/guides/resume-cv-cover-letter-perspective-statement/cv-writing-guide-for-graduate-students" },
+                    { title: "10. Stanford University Academic CV Template (Word)", url: "https://med.stanford.edu/content/dam/sm/bioscicareers/documents/academia_cv_template.docx" },
+                    { title: "Stanford Sample CVs for Professoriate/Clinician Lines", url: "https://med.stanford.edu/academicaffairs/faculty/promotion-reappointment/how-to-organize-your-cv-candidate-s-statement.html" },
+                    { title: "11. Yale University Resume Template Page", url: "https://ocs.yale.edu/resources/ocs-resume-template" },
+                    { title: "Yale College General Resume Template (Word)", url: "https://cdn.ocs.yale.edu/wp-content/uploads/sites/77/2022/10/Yale-College-General-Template-v.1.docx" },
+                    { title: "12. MIT Resume, Cover Letter, and CV Guidance", url: "https://capd.mit.edu/channels/make-a-resume-cover-letter-cv" },
+                    { title: "MIT Sample Resumes/CVs", url: "https://capd.mit.edu/resources/sample-resumes" },
+                    { title: "13. UC Berkeley Sample Resumes and CVs", url: "https://career.berkeley.edu/prepare-for-success/resumes/sample-resumes" },
+                    { title: "15. Imperial College London Official CV Advice", url: "https://www.imperial.ac.uk/careers/applications-and-interviews/cv/" }
+                ]
+            }
+        ];
+
+        let resourceData = JSON.parse(localStorage.getItem('cvResourceData')) || defaultData;
+
+        function saveData() {
+            localStorage.setItem('cvResourceData', JSON.stringify(resourceData));
+        }
+
+        function renderData(filter = '') {
+            const container = document.getElementById('categoryContainer');
+            container.innerHTML = '';
+            let hasResults = false;
+
+            resourceData.forEach((cat, catIndex) => {
+                const filteredLinks = cat.links.filter(link => 
+                    link.title.toLowerCase().includes(filter.toLowerCase()) || 
+                    cat.category.toLowerCase().includes(filter.toLowerCase()) ||
+                    link.url.toLowerCase().includes(filter.toLowerCase())
+                );
+
+                if (filteredLinks.length > 0 || filter === '') {
+                    hasResults = true;
+                    const card = document.createElement('div');
+                    card.className = 'glass-card rounded-2xl p-5 shadow-md flex flex-col justify-between';
+
+                    let linksHtml = '';
+                    cat.links.forEach((link, linkIndex) => {
+                        const isVisible = filter === '' || 
+                            link.title.toLowerCase().includes(filter.toLowerCase()) || 
+                            cat.category.toLowerCase().includes(filter.toLowerCase());
+
+                        if (isVisible) {
+                            linksHtml += `
+                                <div class="group flex items-center justify-between py-2 border-b border-slate-200/60 last:border-none">
+                                    <a href="${link.url}" target="_blank" class="text-sky-700 hover:text-sky-900 font-medium text-sm flex items-center gap-2 truncate pr-2 transition">
+                                        <i class="fa-solid fa-arrow-up-right-from-square text-xs text-sky-500 shrink-0"></i>
+                                        <span class="truncate">${link.title}</span>
+                                    </a>
+                                    <div class="flex items-center gap-2 opacity-80 group-hover:opacity-100 shrink-0">
+                                        <button onclick="editLink(${catIndex}, ${linkIndex})" class="text-slate-500 hover:text-sky-600 p-1 text-xs" title="Edit Link">
+                                            <i class="fa-solid fa-pen-to-square"></i>
+                                        </button>
+                                        <button onclick="deleteLink(${catIndex}, ${linkIndex})" class="text-slate-500 hover:text-rose-600 p-1 text-xs" title="Delete Link">
+                                            <i class="fa-solid fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            `;
+                        }
+                    });
+
+                    card.innerHTML = `
+                        <div>
+                            <h2 class="text-lg font-bold text-sky-900 mb-3 pb-2 border-b-2 border-sky-200 flex items-center justify-between">
+                                <span><i class="fa-solid fa-folder-open text-sky-600 mr-2"></i>${cat.category}</span>
+                                <span class="text-xs bg-sky-200 text-sky-800 px-2 py-0.5 rounded-full font-semibold">${cat.links.length}</span>
+                            </h2>
+                            <div class="space-y-1 mb-4">
+                                ${linksHtml}
+                            </div>
+                        </div>
+                    `;
+                    container.appendChild(card);
+                }
+            });
+
+            if (!hasResults) {
+                container.innerHTML = `<div class="col-span-full text-center py-12 text-slate-500 glass-card rounded-2xl">No matching resources found.</div>`;
+            }
+        }
+
+        document.getElementById('searchInput').addEventListener('input', (e) => {
+            renderData(e.target.value);
+        });
+
+        // Modal Controls for Links
+        function openModal(catIdx = null, linkIdx = null) {
+            document.getElementById('linkModal').classList.remove('hidden');
+            document.getElementById('linkModal').classList.add('flex');
+            
+            if (catIdx !== null && linkIdx !== null) {
+                document.getElementById('modalTitle').innerText = 'Edit Resource Link';
+                document.getElementById('editCategoryIndex').value = catIdx;
+                document.getElementById('editLinkIndex').value = linkIdx;
+                document.getElementById('formCategory').value = resourceData[catIdx].category;
+                document.getElementById('formTitle').value = resourceData[catIdx].links[linkIdx].title;
+                document.getElementById('formUrl').value = resourceData[catIdx].links[linkIdx].url;
+            } else {
+                document.getElementById('modalTitle').innerText = 'Add New Resource Link';
+                document.getElementById('linkForm').reset();
+                document.getElementById('editCategoryIndex').value = '';
+                document.getElementById('editLinkIndex').value = '';
+            }
+        }
+
+        function closeModal() {
+            document.getElementById('linkModal').classList.remove('flex');
+            document.getElementById('linkModal').classList.add('hidden');
+        }
+
+        // Developer Modal Controls
+        function openDeveloperModal() {
+            document.getElementById('devModal').classList.remove('hidden');
+            document.getElementById('devModal').classList.add('flex');
+        }
+
+        function closeDeveloperModal() {
+            document.getElementById('devModal').classList.remove('flex');
+            document.getElementById('devModal').classList.add('hidden');
+        }
+
+        function handleFormSubmit(e) {
+            e.preventDefault();
+            const catName = document.getElementById('formCategory').value.trim();
+            const title = document.getElementById('formTitle').value.trim();
+            const url = document.getElementById('formUrl').value.trim();
+            const editCatIdx = document.getElementById('editCategoryIndex').value;
+            const editLinkIdx = document.getElementById('editLinkIndex').value;
+
+            if (editCatIdx !== '' && editLinkIdx !== '') {
+                const cIdx = parseInt(editCatIdx);
+                const lIdx = parseInt(editLinkIdx);
+                
+                if (resourceData[cIdx].category !== catName) {
+                    resourceData[cIdx].links.splice(lIdx, 1);
+                    if (resourceData[cIdx].links.length === 0) {
+                        resourceData.splice(cIdx, 1);
+                    }
+                    addToCategory(catName, title, url);
+                } else {
+                    resourceData[cIdx].links[lIdx] = { title, url };
+                }
+            } else {
+                addToCategory(catName, title, url);
+            }
+
+            saveData();
+            renderData(document.getElementById('searchInput').value);
+            closeModal();
+        }
+
+        function addToCategory(catName, title, url) {
+            let existingCat = resourceData.find(c => c.category.toLowerCase() === catName.toLowerCase());
+            if (existingCat) {
+                existingCat.links.push({ title, url });
+            } else {
+                resourceData.push({
+                    category: catName,
+                    links: [{ title, url }]
+                });
+            }
+        }
+
+        function editLink(catIdx, linkIdx) {
+            openModal(catIdx, linkIdx);
+        }
+
+        function deleteLink(catIdx, linkIdx) {
+            if (confirm('Are you sure you want to delete this link?')) {
+                resourceData[catIdx].links.splice(linkIdx, 1);
+                if (resourceData[catIdx].links.length === 0) {
+                    resourceData.splice(catIdx, 1);
+                }
+                saveData();
+                renderData(document.getElementById('searchInput').value);
+            }
+        }
+
+        renderData();
+    </script>
+</body>
+</html>
